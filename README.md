@@ -1,5 +1,7 @@
 # 実践Redis入門 技術の仕組みから現場の活用まで
 
+<img src="https://user-images.githubusercontent.com/119023655/203894328-a995b33e-c442-443d-a14f-c778b71d5a05.png" alt="Book cover" width="300" />
+
 このレポジトリは、[実践Redis入門技術の仕組みから現場の活用まで](https://amzn.asia/d/6UqgZV8)の書籍中で扱われるサンプルアプリケーション等のコードレポジトリです。
 書籍を読み進めていく際に、ご活用ください。
 
