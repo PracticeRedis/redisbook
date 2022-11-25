@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Redis Lists - Timeline</title>
+        <style>
+            #messages { margin: 50px 10px; }
+            #messages li { padding: 5px 10px; list-style-type:none; }
+            #messages li:nth-child(odd) { background: #eee; }
+        </style>
+    </head>
+    <body>
+        <h1>Redis Lists - Timeline</h1>
+        <form id='send-message' onsubmit="sendMessage(event)">
+            <div> User: <input type='text' id='user' /></div>
+            <textarea cols='70' rows='3' id='message' autocomplete="off"></textarea>
+            <button id='send'>Send</button>
+        </form>
+        <div id='status'>Let's send message!</div>
+        <ul id='messages'>
+        </ul>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script>
+          sendMessage(null);
+
+          function sendMessage(event) {
+            var isFirst = false;
+
+            if (event == null) {
+              isFirst = true;
+            } else {
+              event.preventDefault();
+            }
+
+            // Update ranking information with asynchronous communication
+            $.ajax({
+              url: '/timeline',
+              type: 'POST',
+              dataType: "json",
+              data: {
+                user: $('#user').val(),
+                message: $('#message').val(),
+                isFirst: isFirst
+              },
+              timeout: 1000,
+            })
+            .done(function(messages) {
+              if (!isFirst) $('#status').text('done!');
+
+              $('#messages').empty();
+              $.each(messages, function(index, message) {
+                var record = message.split(':');
+                $('#messages').append($('<li>').text(record[0] + " : " + record[1]));
+              })
+            })
+            .fail(function() {
+              $('#status').text('Failed to send.');
+            });
+          }
+        </script>
+    </body>
+</html>

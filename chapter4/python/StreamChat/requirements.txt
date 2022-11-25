@@ -1,0 +1,5 @@
+fastapi
+starlette
+uvicorn[standard]
+aioredis
+uvloop

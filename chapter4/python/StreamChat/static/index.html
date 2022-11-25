@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Redis Streams - Chat</title>
+        <style>
+            #messages { margin: 50px 10px; }
+            #messages li { padding: 5px 10px; list-style-type:none; }
+            #messages li:nth-child(odd) { background: #eee; }
+        </style>
+    </head>
+    <body>
+        <h1>Redis Streams - Chat</h1>
+        <form name="join-info" id="join-info" action="" onsubmit="joinRoom(event)">
+            User: <input type="text" name="username" id="username" /> Room: <input type="text" name="room" id="room" />
+            <button>Join</button>
+        </form>
+        <ul id='messages'>
+        </ul>
+        <form action="" onsubmit="sendMessage(event)">
+            <textarea cols=70" rows="10" id="messageText"></textarea>
+            <button>Send</button>
+        </form>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script>
+            // Communication with WebSocket
+            var ws = null
+            function joinRoom(event) {
+                event.preventDefault()
+
+                if (ws != null) ws.close();
+
+                ws = new WebSocket("ws://3.238.154.163/:8080/ws?" + $('#join-info').serialize())
+                ws.onmessage = function(event) {
+                    $('#messages').append($('<li>').text(event.data));
+                    $('#messages').scrollTop($('#messages').get(0).scrollHeight);
+                };
+            }
+            function sendMessage(event) {
+                var username = $('#username').val()
+                var input = $("#messageText").val()
+                ws.send(username + " : " + input)
+                $("#messageText").text('')
+                event.preventDefault()
+            }
+        </script>
+    </body>
+</html>

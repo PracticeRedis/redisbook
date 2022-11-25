@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <title>Redis Sets - Voting</title>
+    </head>
+  <body>
+    <h1>Redis Sets - Voting</h1>
+    <form>
+      Your Name: <input type="text" class="voter">
+      <div class="vote">
+        <input type="button" id="vote1" value="candidate:1">
+        <input type="button" id="vote2" value="candidate:2">
+        <input type="button" id="vote3" value="candidate:3">
+        <input type="button" id="vote4" value="candidate:4">
+      </div>
+    </form>
+
+    <div id="status">Let's vote!</div>
+    <div id="result"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+      getRanking(null,null);
+      $('[id^=vote]').on('click', function() {
+        $('#status').text('Now voting...');
+        getRanking($('.voter').val(), $(this).val())
+
+      })
+
+      function getRanking(voter, candidate) {
+        // 非同期通信でランキングを更新
+        $.ajax({
+          url: '/vote',
+          type: 'POST',
+          dataType: "json",
+          data: {
+            voter: voter,
+            candidate: candidate
+          },
+          timeout: 1000,
+        })
+        .done(function(candidates) {
+          $('#result').empty();
+          $.each(candidates, function(candidate, count) {
+            $('#result').append($('<li>').text(candidate + " : " + count));
+          })
+        })
+        .fail(function() {
+          $('#status').text('Failed to vote.');
+        });
+      }
+    </script>
+  </body>
+</html>

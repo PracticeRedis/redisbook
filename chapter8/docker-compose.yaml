@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  node:
+    image: redis:latest
+    ports:
+      - 6379
+    volumes:
+      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - redis_network
+
+networks:
+  redis_network:
